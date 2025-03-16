@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Install dependencies
+echo "Installing dependencies..."
+npm install
+
+# Create .env file
+echo "Creating .env file..."
+cat > .env << EOL
+NEXT_PUBLIC_SUPABASE_URL=https://yfzgwczxiurosscswedy.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlmemd3Y3p4aXVyb3NzY3N3ZWR5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIwMzc1ODksImV4cCI6MjA1NzYxMzU4OX0.YtDEXLoZn2TWOtqv4Wdj7CC9-Su35szkviBz0eK4kRQ
+DATABASE_URL=postgresql://postgres:#878WXx_FDa@&Ue@db.yfzgwczxiurosscswedy.supabase.co:5432/postgres
+EOL
+
+# Create directories if they don't exist
+mkdir -p supabase
+
+# Start the development server
+echo "Starting the development server..."
+npm run dev 
