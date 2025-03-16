@@ -142,22 +142,36 @@ export default function OverlapAnalysis({
             ctx.font = '12px Arial';
             ctx.textAlign = 'center';
 
-            // Split fund name into multiple lines if needed
+            // Improved text wrapping to ensure text stays within the fund box
+            const maxWidth = fundBoxWidth - 20; // Leave some padding
             const words = fund.name.split(' ');
-            let line = '';
-            let lineHeight = 16;
-            let currentY = y + fundBoxHeight / 2 - (lineHeight * (words.length > 3 ? 1.5 : 1));
+            let lines = [];
+            let currentLine = words[0];
 
-            for (let i = 0; i < words.length; i++) {
-                const testLine = line + words[i] + ' ';
-                line = testLine;
+            // Create lines that fit within the box width
+            for (let i = 1; i < words.length; i++) {
+                const testLine = currentLine + ' ' + words[i];
+                const metrics = ctx.measureText(testLine);
 
-                if (i % 2 === 1 || i === words.length - 1) {
-                    ctx.fillText(line.trim(), fundBoxWidth / 2 + 50, currentY);
-                    currentY += lineHeight;
-                    line = '';
+                if (metrics.width > maxWidth) {
+                    lines.push(currentLine);
+                    currentLine = words[i];
+                } else {
+                    currentLine = testLine;
                 }
             }
+            lines.push(currentLine); // Add the last line
+
+            // Calculate vertical position for text
+            const lineHeight = 16;
+            const totalTextHeight = lines.length * lineHeight;
+            let textY = y + (fundBoxHeight - totalTextHeight) / 2 + lineHeight;
+
+            // Draw each line centered in the box
+            lines.forEach(line => {
+                ctx.fillText(line, fundBoxWidth / 2 + 50, textY);
+                textY += lineHeight;
+            });
         });
 
         // Draw stocks on the right side
